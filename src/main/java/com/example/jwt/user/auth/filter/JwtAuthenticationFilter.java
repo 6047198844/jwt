@@ -3,6 +3,7 @@ package com.example.jwt.user.auth.filter;
 import com.example.jwt.user.auth.PrincipalDetails;
 import com.example.jwt.user.auth.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,5 +46,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         final PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
         final String token = tokenService.generate(principalDetailis.getUser());
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + token);
+    }
+
+    @Data
+    private static class LoginRequestDto {
+        private String username;
+        private String password;
     }
 }

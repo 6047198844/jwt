@@ -1,7 +1,7 @@
 package com.example.jwt.user.domain;
 
 import com.example.jwt.user.auth.TokenService;
-import com.example.jwt.user.constant.UserRole;
+import com.example.jwt.user.domain.constant.UserRole;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

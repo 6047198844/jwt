@@ -1,8 +1,9 @@
 package com.example.jwt.user.domain;
 
-import com.example.jwt.user.constant.UserRole;
+import com.example.jwt.user.domain.constant.UserRole;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Builder
+@ToString
 public class User {
     private String username;
     private String password;
@@ -32,5 +34,9 @@ public class User {
                     .collect(Collectors.toList());
         }
         return new ArrayList<>();
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

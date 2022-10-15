@@ -1,4 +1,4 @@
-package com.example.jwt.user.constant;
+package com.example.jwt.user.domain.constant;
 
 public enum UserRole {
     ROLE_USER,
