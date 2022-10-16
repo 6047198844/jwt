@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Data
     private static class LoginRequest {
-        private final String username;
-        private final String password;
+        private String username;
+        private String password;
     }
 }

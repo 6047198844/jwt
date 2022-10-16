@@ -17,8 +17,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsConfig corsConfig;
-    private final UserTokenService userTokenService;
     private final UserRepository userRepository;
+    private final UserTokenService userTokenService;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
