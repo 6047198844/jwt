@@ -13,13 +13,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.jwt.user.auth.filter.JwtProperties.EXPIRE_DATE;
+import static com.example.jwt.user.auth.filter.JwtProperties.SECRET_KEY;
+
 @Slf4j
 @Component
-public class TokenService {
-    private static final String SECRET_KEY = "SECRET_KEY";
-    private static final int EXPIRE_DATE = 30;
-
-    public String generate(User user) {
+public class UserTokenService {
+    public String generate(final User user) {
         return Jwts.builder()
                 .setHeader(createHeader())
                 .setSubject(user.getEmail())
@@ -29,7 +29,12 @@ public class TokenService {
                 .compact();
     }
 
-    private Claims getClaims(String token) {
+    public String parseUsernameByJwt(final String token) {
+        return this.getClaims(token)
+                .get("username", String.class);
+    }
+
+    private Claims getClaims(final String token) {
         try {
             return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
         } catch (SignatureException ex) {
@@ -50,51 +55,29 @@ public class TokenService {
         }
     }
 
-    public String getUsername(String token) {
-        try {
-            return this.getClaims(token)
-                    .get("username", String.class);
-        } catch (SignatureException ex) {
-            log.error("Invalid JWT signature");
-            throw ex;
-        } catch (MalformedJwtException ex) {
-            log.error("Invalid JWT token");
-            throw ex;
-        } catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
-            throw ex;
-        } catch (UnsupportedJwtException ex) {
-            log.error("Unsupported JWT token");
-            throw ex;
-        } catch (IllegalArgumentException ex) {
-            log.error("JWT claims string is empty.");
-            throw ex;
-        }
-    }
-
     private Map<String, Object> createHeader() {
-        Map<String, Object> header = new HashMap<>();
+        final Map<String, Object> header = new HashMap<>();
         header.put("typ", "JWT");
         header.put("alg", "HS256");
-        header.put("regDate", "System.currentTimeMillis()");
+        header.put("regDate", System.currentTimeMillis());
         return header;
     }
-    private Map<String, Object> createClaims(User user) {
-        Map<String, Object> claims = new HashMap<>();
+    private Map<String, Object> createClaims(final User user) {
+        final Map<String, Object> claims = new HashMap<>();
         claims.put("username", user.getUsername());
         claims.put("roles", user.getRoles());
         return claims;
     }
 
     private Date createExpireDate() {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, EXPIRE_DATE);
         return calendar.getTime();
     }
 
 
     private Key createSigningKey() {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
+        final byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 }

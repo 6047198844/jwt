@@ -6,21 +6,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserAuthService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; //추가
+    private final PasswordEncoder passwordEncoder;
 
-    public User join(User user) {
+    public User join(final User user) {
+        // TODO validate user
         final String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         return userRepository.save(user);
-    }
-
-    public Optional<User> findByUserName(String username) {
-        return userRepository.findByUsername(username);
     }
 }

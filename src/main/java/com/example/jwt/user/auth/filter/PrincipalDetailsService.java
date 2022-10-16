@@ -1,4 +1,4 @@
-package com.example.jwt.user.auth;
+package com.example.jwt.user.auth.filter;
 
 import com.example.jwt.user.application.UserRepository;
 import com.example.jwt.user.domain.User;
@@ -8,12 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class PrincipalDetailsService implements UserDetailsService {
-
     private final UserRepository userRepository;
 
     @Override

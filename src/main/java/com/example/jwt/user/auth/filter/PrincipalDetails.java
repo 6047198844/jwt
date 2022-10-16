@@ -1,4 +1,4 @@
-package com.example.jwt.user.auth;
+package com.example.jwt.user.auth.filter;
 
 import com.example.jwt.user.domain.User;
 import lombok.Getter;
