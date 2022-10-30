@@ -13,7 +13,6 @@ public class UserAuthService {
     private final PasswordEncoder passwordEncoder;
 
     public User join(final User user) {
-        // TODO validate user
         final String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         return userRepository.save(user);

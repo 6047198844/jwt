@@ -3,7 +3,9 @@ package com.example.jwt.user.domain;
 import com.example.jwt.user.domain.constant.UserRole;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
+import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,9 +21,12 @@ public class User {
     private String email;
     @Builder.Default
     private String roles = "";
+    @Setter
+    private String refreshToken;
+    private Boolean enabled;
 
     public void addRoles(UserRole userRole) {
-        if (roles.isEmpty()) {
+        if (Strings.isEmpty(roles)) {
             roles = userRole.name();
         }
         roles += String.format(",%s",userRole);
@@ -38,5 +43,17 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void updateRefreshToken(String newToken) {
+        this.refreshToken = newToken;
+    }
+
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void giveUserPermission() {
+        this.addRoles(UserRole.ROLE_USER);
     }
 }

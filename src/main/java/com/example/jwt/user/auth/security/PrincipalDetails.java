@@ -1,4 +1,4 @@
-package com.example.jwt.user.auth.filter;
+package com.example.jwt.user.auth.security;
 
 import com.example.jwt.user.domain.User;
 import lombok.Getter;
@@ -32,11 +32,6 @@ public class PrincipalDetails implements UserDetails{
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-    
 	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();

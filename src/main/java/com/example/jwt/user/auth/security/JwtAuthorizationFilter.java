@@ -1,7 +1,7 @@
-package com.example.jwt.user.auth.filter;
+package com.example.jwt.user.auth.security;
 
 import com.example.jwt.user.application.UserRepository;
-import com.example.jwt.user.auth.UserTokenService;
+import com.example.jwt.user.auth.TokenService;
 import com.example.jwt.user.domain.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,12 +17,12 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-    private final UserTokenService userTokenService;
+    private final TokenService tokenService;
     private final UserRepository userRepository;
 
-    public JwtAuthorizationFilter(final AuthenticationManager authenticationManager, final UserRepository userRepository, final UserTokenService userTokenService) {
+    public JwtAuthorizationFilter(final AuthenticationManager authenticationManager, final UserRepository userRepository, final TokenService tokenService) {
         super(authenticationManager);
-        this.userTokenService = userTokenService;
+        this.tokenService = tokenService;
         this.userRepository = userRepository;
     }
 
@@ -37,7 +37,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
         final String jwt = request.getHeader(JwtProperties.HEADER_STRING)
                 .replace(JwtProperties.TOKEN_PREFIX, "");
-        final String username = userTokenService.parseUsernameByJwt(jwt);
+        final String username = tokenService.parseUsernameByJwt(jwt);
         if (username != null) {
             final Optional<User> userOptional = userRepository.findByUsername(username);
             if (userOptional.isEmpty()) {

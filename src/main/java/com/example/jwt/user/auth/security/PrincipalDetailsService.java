@@ -1,4 +1,4 @@
-package com.example.jwt.user.auth.filter;
+package com.example.jwt.user.auth.security;
 
 import com.example.jwt.user.application.UserRepository;
 import com.example.jwt.user.domain.User;

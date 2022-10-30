@@ -2,9 +2,9 @@ package com.example.jwt.user.auth.config;
 
 
 import com.example.jwt.user.application.UserRepository;
-import com.example.jwt.user.auth.UserTokenService;
-import com.example.jwt.user.auth.filter.JwtAuthenticationFilter;
-import com.example.jwt.user.auth.filter.JwtAuthorizationFilter;
+import com.example.jwt.user.auth.TokenService;
+import com.example.jwt.user.auth.security.JwtAuthenticationFilter;
+import com.example.jwt.user.auth.security.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CorsConfig corsConfig;
     private final UserRepository userRepository;
-    private final UserTokenService userTokenService;
+    private final TokenService tokenService;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -30,8 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .httpBasic().disable()
 
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userTokenService))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, userTokenService))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), tokenService))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository, tokenService))
                 .authorizeRequests()
                 .antMatchers("/user/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")

@@ -1,6 +1,8 @@
-package com.example.jwt.user.auth.filter;
+package com.example.jwt.user.auth.security;
 
-import com.example.jwt.user.auth.UserTokenService;
+import com.example.jwt.user.application.UserAuthService;
+import com.example.jwt.user.auth.TokenItem;
+import com.example.jwt.user.auth.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private final UserTokenService userTokenService;
+    private final TokenService tokenService;
 
     @Override
     public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
@@ -41,10 +43,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(final HttpServletRequest request,
                                             final HttpServletResponse response,
                                             final FilterChain chain,
-                                            final Authentication authResult) {
+                                            final Authentication authResult) throws IOException {
         final PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
-        final String token = userTokenService.generate(principalDetails.getUser());
-        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + token);
+        final String accessToken = tokenService.generateAccessToken(principalDetails.getUser());
+        final String refreshToken = tokenService.generateRefreshToken(principalDetails.getUser());
+        principalDetails.getUser().setRefreshToken(refreshToken);
+
+        final TokenItem tokenItem = new TokenItem(accessToken, refreshToken);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String jsonTokenItem = objectMapper.writeValueAsString(tokenItem);
+        new ObjectMapper().writeValue(response.getWriter(), jsonTokenItem);
     }
 
     @Data
